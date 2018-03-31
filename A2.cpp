@@ -142,5 +142,12 @@ int main() {
 	b[cnt] = -0.000995;
 	cnt++;
 	gauss(10);
+	for (int i = 0; i < n0; i++) {
+		for (int j = 0; j < 4; j++) {
+			s0[i][j] = e[i * n0 + j];
+			printf("%f ", s0[i][j]);
+		}
+		printf("\n");
+	}
 }
 
