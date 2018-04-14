@@ -1,6 +1,7 @@
 #include "gauss.h"
 
 #include <cmath>
+#include <cstdio>
 
 const double inf = 100000000.0, eps = 0.00000001;
 
@@ -29,20 +30,22 @@ int gauss(vector <double> &x, vector <vector <double>> &a, vector <double> &b) {
 
 	for (const auto &i : b) {
 		tmpb.emplace_back(i);
+		tmpflag.emplace_back(0);
 	}
 
 	double tmpmax, tmpr;
 	int tmpp;
 
-	for (int i = 0; i < a.size(); i++) {
+	for (int i = 0; i < tmpa.size(); i++) {
 		tmpp = -1;
 		tmpmax = -inf;
-		for (int j = 0; j < a[i].size(); j++) {
+		for (int j = 0; j < tmpa.size(); j++) {
 			if (!tmpflag[j] && abs(tmpa[j][i]) > tmpmax) {
 				tmpp = j;
 				tmpmax = abs(tmpa[j][i]);
 			}
 		}
+
 
 		if (tmpp == -1) {
 			return 1;
@@ -65,13 +68,14 @@ int gauss(vector <double> &x, vector <vector <double>> &a, vector <double> &b) {
 			}
 		}
 	}
+
 	for (int i = 0; i < tmpa.size(); i++) {
 		x.emplace_back(0);
 	}
 	for (int i = 0; i < tmpa.size(); i++) {
-		for (int j = 0; j < tmpa[i].size(); j++) {
-			if (tmpa[i][j] > eps) {
-				x[j] = tmpb[j];
+		for (int j = 0; j < tmpa.size(); j++) {
+			if (abs(tmpa[i][j] - 1) < eps) {
+				x[j] = tmpb[i];
 			}
 		}
 	}

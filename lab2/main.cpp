@@ -7,15 +7,16 @@
 
 using namespace std;
 
-int spot(vector <double> &c, vector <double> &a, vector <double> &b) {
+int spot(double &c, vector <double> &a, vector <double> &b) {
 	if (a.size() != b.size()) {
 		return 1;
 	}
 
-	c.clear();
+	c = 0;
 	for (int i = 0; i < a.size(); i++) {
-		c.emplace_back(a[i] * b[i]);
+		c += a[i] * b[i];
 	}
+	return 0;
 }
 
 double mod(vector <double> &a) {
@@ -46,41 +47,37 @@ void init(vector <vector <double>> &x, vector <double> &y) {
 	for (int i = 2; i < 4; i++) {
 		x.emplace_back(0);
 		for (int j = 0; j < 7; j++) {
-			x[i].emplace_back(0);
+			x[i].emplace_back(x[i - 1][j] * x[1][j]);
 		}
-		spot(x[i], x[i - 1], x[1]);
 	}
 
 	y.emplace_back(-4.467);
 	y.emplace_back(-0.452);
 	y.emplace_back(0.551);
 	y.emplace_back(0.048);
-	y.emplace_back(-0.477);
+	y.emplace_back(-0.447);
 	y.emplace_back(0.549);
 	y.emplace_back(4.552);
 }
 
 void calc(vector <double> &z, vector <vector <double>> &x, vector <double> &y, int dim) {
 	vector <vector <double>> ma;
-	vector <double> vb, tmp;
+	vector <double> vb;
+	double tmp;
 
-	for (int i = 0; i < dim; i++) {
+	z.clear();
+	for (int i = 0; i <= dim; i++) {
 		ma.emplace_back(0);
-		for (int j = 0; j < dim; j++) {
+		for (int j = 0; j <= dim; j++) {
 			spot(tmp, x[i], x[j]);
-			ma[i].emplace_back(mod(tmp));
+			ma[i].emplace_back(tmp);
 		}
 	}
 
-	for (int i = 0; i < dim; i++) {
+	for (int i = 0; i <= dim; i++) {
 		spot(tmp, x[i], y);
-		vb.emplace_back(mod(tmp));
+		vb.emplace_back(tmp);
 	}
-
-//	for (int i = 0; i < ma.size(); i++) {
-//		for (const auto &j : ma[i]) printf("%.2f ", j);
-//		printf("%.2f \n", vb[i]);
-//	}
 
 	gauss(z, ma, vb);
 }
@@ -90,15 +87,21 @@ int main() {
 	vector <double> y;
 	vector <double> z;
 	init(x, y);
+	calc(z, x, y, 1);
+	for (auto i : z) {
+		printf("%.5f ", i);
+	}
+	printf("\n");
+
 	calc(z, x, y, 2);
 	for (auto i : z) {
 		printf("%.5f ", i);
 	}
 	printf("\n");
-	/*
-	2.004357
-	-0.9544643
 
-	
-	*/
+	calc(z, x, y, 3);
+	for (auto i : z) {
+		printf("%.5f ", i);
+	}
+	printf("\n");
 }
