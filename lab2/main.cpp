@@ -3,6 +3,8 @@
 #include <vector>
 #include <cmath>
 
+#include "gauss.h"
+
 using namespace std;
 
 int spot(vector <double> &c, vector <double> &a, vector <double> &b) {
@@ -58,7 +60,7 @@ void init(vector <vector <double>> &x, vector <double> &y) {
 	y.emplace_back(4.552);
 }
 
-void calc1(vector <vecotr <double>> &x, vector <double> &y, vector <double> &z, int dim) {
+void calc(vector <double> &z, vector <vector <double>> &x, vector <double> &y, int dim) {
 	vector <vector <double>> ma;
 	vector <double> vb, tmp;
 
@@ -75,12 +77,28 @@ void calc1(vector <vecotr <double>> &x, vector <double> &y, vector <double> &z, 
 		vb.emplace_back(mod(tmp));
 	}
 
-	int err = gauss(z, ma, mb);
-	
-	if (err) {
-		printf("Gauss error.\n");
-	}
+//	for (int i = 0; i < ma.size(); i++) {
+//		for (const auto &j : ma[i]) printf("%.2f ", j);
+//		printf("%.2f \n", vb[i]);
+//	}
+
+	gauss(z, ma, vb);
 }
 
 int main() {
+	vector <vector <double>> x;
+	vector <double> y;
+	vector <double> z;
+	init(x, y);
+	calc(z, x, y, 2);
+	for (auto i : z) {
+		printf("%.5f ", i);
+	}
+	printf("\n");
+	/*
+	2.004357
+	-0.9544643
+
+	
+	*/
 }
