@@ -41,15 +41,15 @@ pair <int, double> calc3() {
 	double h = 1, tmp = 1;
 	vector <vector <double>> t;
 	t.emplace_back(0);
-	t[0].emplace_back(0.5 * (exp(1) - 1));
+	t[0].emplace_back(0.5 * (exp(1) + 1));
 	while (true) {
 		k++;
 		n = (1 << k);
 		h = 1 / double(n);
 		t.emplace_back(0);
 		t[k].emplace_back(t[k - 1][0] / 2);
-		for (int i = 0; i < n; i++) {
-			t[k][0] += h / 2 * exp((2 * i + 1) / double(2 * n));
+		for (int i = 0; i < n / 2; i++) {
+			t[k][0] += h * exp((2 * i + 1) / double(n));
 		}
 		tmp = 1;
 		for (int i = 1; i <= k; i++) {

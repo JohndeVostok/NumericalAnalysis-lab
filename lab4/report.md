@@ -114,15 +114,15 @@ pair <int, double> calc3() {
 	double h = 1, tmp = 1;
 	vector <vector <double>> t;
 	t.emplace_back(0);
-	t[0].emplace_back(0.5 * (exp(1) - 1));
+	t[0].emplace_back(0.5 * (exp(1) + 1));
 	while (true) {
 		k++;
 		n = (1 << k);
 		h = 1 / double(n);
 		t.emplace_back(0);
 		t[k].emplace_back(t[k - 1][0] / 2);
-		for (int i = 0; i < n; i++) {
-			t[k][0] += h / 2 * exp((2 * i + 1) / double(2 * n));
+		for (int i = 0; i < n / 2; i++) {
+			t[k][0] += h * exp((2 * i + 1) / double(n));
 		}
 		tmp = 1;
 		for (int i = 1; i <= k; i++) {
@@ -138,12 +138,12 @@ pair <int, double> calc3() {
 ```
 
 ```shell
-Romberg: 20 1.71828131
+Romberg: 3 1.71828183
 ```
 
 误差小于$1\times10^{-6}$
 
-迭代次数20，分段数1048576
+迭代次数3，分段数8
 
 ### 复合高斯公式
 
@@ -193,4 +193,4 @@ g++ main.cpp --std=c++11 -o main
 
 ## 实验总结
 
-这个实验做起来较为轻松，主要原因是这次不需要画图了。而实际写的时候，也体会到了不同的积分方式效率区别，我比较不理解的是龙贝格积分为什么会比直接梯形还慢，这一点还需要进行考虑。
+这个实验做起来较为轻松，主要原因是这次不需要画图了。而实际写的时候，也体会到了不同的积分方式效率区别，其中龙贝格方式我开始的时候初值给错了，导致要迭代20轮，速度极慢。修复后只需要迭代三轮，让我对这个方法的认识加深了。
