@@ -104,8 +104,93 @@ Simpson: 1.71828278
 
 误差小于$1\times10^{-6}$
 
-## 实验组织
+### 龙贝格求积公式
+
+实验代码
+
+```cpp
+pair <int, double> calc3() {
+	int k = 0, n = 1;
+	double h = 1, tmp = 1;
+	vector <vector <double>> t;
+	t.emplace_back(0);
+	t[0].emplace_back(0.5 * (exp(1) + 1));
+	while (true) {
+		k++;
+		n = (1 << k);
+		h = 1 / double(n);
+		t.emplace_back(0);
+		t[k].emplace_back(t[k - 1][0] / 2);
+		for (int i = 0; i < n / 2; i++) {
+			t[k][0] += h * exp((2 * i + 1) / double(n));
+		}
+		tmp = 1;
+		for (int i = 1; i <= k; i++) {
+			tmp *= 4;
+			t[k].emplace_back((tmp * t[k][i - 1] - t[k - 1][i - 1]) / (tmp - 1));
+		}
+		if (abs(t[k][k] - t[k - 1][k - 1]) < eps) {
+			break;
+		}
+	}
+	return make_pair(k, t[k][k]);
+}
+```
+
+```shell
+Romberg: 3 1.71828183
+```
+
+误差小于$1\times10^{-6}$
+
+迭代次数3，分段数8
+
+### 复合高斯公式
+
+$(\frac{1}{1 + x^2})^{(4)}\le4!=24$
+
+$1\times10^{-6}\ge|R_n(f)|=\frac{h^4}{4320}f^{(4)}(\xi)$
+
+$h^4<180\times10^{-6}$
+
+$h<0.1158292$
+
+$n\ge\frac{1}{h}=8.6334002,n=9$
+
+$\int_a^bf(x)dx=0.78539816$
+
+```cpp
+double calc4() {
+	int n = 9;
+	double h = 1 / double(n), res = 0, tmp = 2 * sqrt(3);
+	for (int i = 0; i < n; i++) {
+		res += h / 2 * f4((2 * i + 1) / double(2 * n) - h / tmp);
+		res += h / 2 * f4((2 * i + 1) / double(2 * n) + h / tmp);
+	}
+	return res;
+}
+```
+
+```shell
+0.78539816
+```
+
+误差小于$1\times10^{-6}$
+
+##实验组织
+
+代码清单
+
+main.cpp
+
+运行方法
+
+```shell
+g++ main.cpp --std=c++11 -o main
+./main
+```
+
 
 ## 实验总结
 
-在这个实验之后，我更加理解了最小二乘法的实现原理和实际使用效果。对该算法有了更深的理解。
+这个实验做起来较为轻松，主要原因是这次不需要画图了。而实际写的时候，也体会到了不同的积分方式效率区别，其中龙贝格方式我开始的时候初值给错了，导致要迭代20轮，速度极慢。修复后只需要迭代三轮，让我对这个方法的认识加深了。
