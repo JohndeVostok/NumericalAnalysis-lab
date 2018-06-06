@@ -137,6 +137,46 @@ int gauss(vector <double> &x, Matrix &a, vector <double> &b) {
 	return 0;
 }
 
+int sor(vector <double> &x, Matrix &a, vector <double> &b) {
+	if (a.idx.size() != b.size()) {
+		return 1;
+	}
+	double w = 1.933;
+	vector <double> xp(b.size(), 0), xq(b.size(), 0), dx;
+	int gen = 0;
+	while (true) {
+		gen++;
+		for (int i = 0; i < xq.size(); i++) {
+			double ci, tmp = b[i];
+			for (int j = a.idx[i]; j != -1; j = a.nodes[j].next) {
+				if (a.nodes[j].y == i) {
+					ci = a.nodes[j].s;
+				} else {
+					if (a.nodes[j].y < i) {
+						tmp -= xq[a.nodes[j].y] * a.nodes[j].s;
+					} else {
+						tmp -= xp[a.nodes[j].y] * a.nodes[j].s;
+					}
+				}
+			}
+			xq[i] = (1 - w) * xp[i] + w * tmp / ci;
+		}
+		sub(dx, xp, xq);
+		if (norminf(dx) < EPS) {
+			break;
+		}
+		for (int i = 0; i < xp.size(); i++) {
+			xp[i] = xq[i];
+		}
+	}
+	printf("%d\n", gen);
+	x.clear();
+	for (const auto &i : xq) {
+		x.emplace_back(i);
+	}
+	return 0;
+}
+
 int main() {
 	int n = 100;
 	double eps = 1,	alp = 0.5, h = 1 / double(n);
@@ -158,8 +198,17 @@ int main() {
 
 	jacobi(x0, a, b);
 	gauss(x1, a, b);
+	sor(x2, a, b);
+	for (auto &x : x0) {
+		printf("%.5f ", x);
+	}
+	printf("\n");
 	for (auto &x : x1) {
-		printf("%f ", x);
+		printf("%.5f ", x);
+	}
+	printf("\n");
+	for (auto &x : x2) {
+		printf("%.5f ", x);
 	}
 	printf("\n");
 }

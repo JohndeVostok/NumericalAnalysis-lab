@@ -10,11 +10,16 @@ def f(x):
 	return y
 
 if __name__ == "__main__":
-	y = [f((i) / n) for i in range(101)]
-	print(y)
+	y = [f((i + 1) / n) for i in range(99)]
+	with open("res.out", "r") as f:
+		lines = f.readlines()
+	yj = [float(x) for x in lines[3].split(" ")[:-1]]
+	yg = [float(x) for x in lines[4].split(" ")[:-1]]
+	ys = [float(x) for x in lines[5].split(" ")[:-1]]
 
-	p = eps
-	q = -(2 * eps + h)
-	r = eps + h
-
-	print(p * y[98] + q * y[99], a * h * h - r)
+	dj = max([abs(y[i] - yj[i]) for i in range(99)])
+	print(dj)
+	dg = max([abs(y[i] - yg[i]) for i in range(99)])
+	print(dg)
+	ds = max([abs(y[i] - ys[i]) for i in range(99)])
+	print(ds)
